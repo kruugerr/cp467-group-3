@@ -18,10 +18,8 @@ from imutils import face_utils
 #   - imutils (for VideoStream helper and landmark utilities)
 #   - numpy
 #
-# You also need the pretrained 68-point landmark model file:
+# We also need the pretrained 68-point landmark model file:
 #   shape_predictor_68_face_landmarks.dat
-# Download it from the official dlib model zoo and either place it next to
-# this script or update PREDICTOR_PATH below to point to its location.
 # -----------------------------------------------------------------------------
 
 PREDICTOR_PATH = "shape_predictor_68_face_landmarks.dat"
@@ -30,7 +28,7 @@ PREDICTOR_PATH = "shape_predictor_68_face_landmarks.dat"
 EAR_THRESHOLD = 0.21
 
 # Number of consecutive frames with EAR below threshold required to count a blink
-EAR_CONSEC_FRAMES = 3
+EAR_CONSEC_FRAMES = 1
 
 # Number of blinks required to confirm liveness
 BLINKS_REQUIRED_FOR_LIVENESS = 2
@@ -109,6 +107,10 @@ def main():
                 r0 = rects[0]
                 shape = predictor(rgb, r0)
                 shape = face_utils.shape_to_np(shape)
+
+                # Draw facial landmarks
+                for (x, y) in shape:
+                    cv2.circle(frame, (x, y), 1, (0, 255, 0), -1)
 
                 # Extract eye regions and compute EAR
                 leftEye = shape[lStart:lEnd]
